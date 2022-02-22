@@ -1,6 +1,6 @@
 // Create your own supabase database using the provided seeds.sql file
-const SUPABASE_URL = '';
-const SUPABASE_KEY = '';
+const SUPABASE_URL = 'https://hogsvwpywyaxkjlqavnk.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhvZ3N2d3B5d3lheGtqbHFhdm5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDQzNDE0MjgsImV4cCI6MTk1OTkxNzQyOH0.WAiLrZ3mwONCOVJiPp_a-AERLY-_YjL2j4b7vkU6QwQ';
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -10,18 +10,33 @@ export function getUser() {
 
 export async function getFamilies() {
     // fetch all families and their bunnies
+    const response = await client
+        .from('loving_families')
+        .select('*, fuzzy_bunnies (*)')
+        .match({ 'fuzzy_bunnies.user_id':  client.auth.session().user.id });
+    return checkError(response);
+}
 
+
+export async function createBunny(bunny) {
+    // create a bunny using the bunny argument
+    const response = await client
+        .from('fuzzy_bunnies')
+        .insert({
+            ...bunny,
+            user_id: client.auth.session().user.id,
+        });
+    
     return checkError(response);
 }
 
 export async function deleteBunny(id) {
     // delete a single bunny using the id argument
-
-    return checkError(response);
-}
-
-export async function createBunny(bunny) {
-    // create a bunny using the bunny argument
+    const response = await client
+        .from('fuzzy_bunnies')
+        .delete()
+        .match({ id:id })
+        .single();
 
     return checkError(response);
 }
