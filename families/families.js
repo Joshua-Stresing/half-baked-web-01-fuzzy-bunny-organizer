@@ -19,7 +19,8 @@ logoutButton.addEventListener('click', () => {
 function displayFamilies(families) {
     // fetch families from supabase
     // clear out the familiesEl
-    
+    familiesEl.textContent = '';
+
     for (let family of families) {
         const familyEl = document.createElement('div');
         const nameEl = document.createElement('h3');
@@ -28,7 +29,7 @@ function displayFamilies(families) {
         bunniesEl.classList.add('bunnies');
         familyEl.classList.add('family');
     
-        nameEl.textContent.textContent = family.name;
+        nameEl.textContent = family.name;
 
         for (let bunny of family.fuzzy_bunnies) {
             const bunnyEl = document.createElement('div');
